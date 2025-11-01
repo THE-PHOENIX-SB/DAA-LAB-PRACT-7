@@ -1,0 +1,38 @@
+class Solution:
+    def hamiltonianCycle(self, n, graph):
+        path = [-1] * n
+        visited = [False] * n
+        path[0] = 0
+        visited[0] = True
+
+        def backtrack(pos):
+            if pos == n:
+                if graph[path[pos-1]][path[0]] == 1:
+                    return True
+                return False
+
+            for v in range(1, n):
+                if graph[path[pos-1]][v] == 1 and not visited[v]:
+                    path[pos] = v
+                    visited[v] = True
+
+                    if backtrack(pos + 1):
+                        return True
+
+                    visited[v] = False
+                    path[pos] = -1
+
+            return False
+
+        if backtrack(1):
+            return path + [path[0]]
+        else:
+            return None
+
+    def check_and_print(self, n, graph, label_list):
+        cycle = self.hamiltonianCycle(n, graph)    
+        if cycle is None:
+            print("No Hamiltonian Cycle found, no route possible.")
+        else:
+            labelled_cycle = [label_list[i] for i in cycle]
+            print("Hamiltonian Cycle found: ", " -> ".join(labelled_cycle))
